@@ -1,20 +1,29 @@
-group 'com.johnsonb'
-version = '0.1.0'
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'application'
-
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'Example MapReduce using Gradle', 'Implementation-Version': version
+buildscript {
+    repositories {
+        mavenCentral()
     }
-
-    baseName = 'map-reduce-view-count'
-    version = '0.1.0'
-    // note this builds one fat jar and it is not recommended for production use - just for illustration purpose
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
+
+plugins {
+  id "application"
+  id "java"
+  id "eclipse"
+}
+
+apply from: "settings.gradle"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "eclipse"
+
+group "com.johnsonb"
+version "0.1.0"
+archivesBaseName = "map-reduce-view-count"
+mainClassName = "com.johnsonb.ViewCount"
+
 
 repositories {
     mavenCentral()
@@ -22,12 +31,6 @@ repositories {
 
 configurations {
     provided
-}
-
-sourceSets {
-    main.compileClasspath += configurations.provided
-    test.compileClasspath += configurations.provided
-    test.runtimeClasspath += configurations.provided
 }
 
 dependencies {
@@ -41,11 +44,31 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 
-
-uploadArchives {
-    repositories {
-        flatDir {
-            dirs 'repos'
-        }
-    }
+sourceSets {
+  main.compileClasspath += configurations.provided
+  main.
+  test.compileClasspath += configurations.provided
+  test.runtimeClasspath += configurations.provided
 }
+
+task mainClass {
+  doLast {
+    printLn 'com.johnsonb.ViewCount'
+  }
+}
+
+jar {
+    manifest {
+      attributes(
+          "Implementation-Title": "Example MapReduce using Gradle",
+          "Implementation-Version": version,
+          "Main-Class": mainClassName
+      )
+    }
+
+    baseName = 'map-reduce-view-count'
+    version = '0.1.0'
+    // note this builds one fat jar and it is not recommended for production use - just for illustration purpose
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
