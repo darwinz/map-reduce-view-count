@@ -46,7 +46,6 @@ dependencies {
 
 sourceSets {
   main.compileClasspath += configurations.provided
-  main.
   test.compileClasspath += configurations.provided
   test.runtimeClasspath += configurations.provided
 }
